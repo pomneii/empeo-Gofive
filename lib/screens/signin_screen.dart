@@ -1,3 +1,4 @@
+import 'package:empeo/screens/name_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:country_flags/country_flags.dart';
 
@@ -157,9 +158,7 @@ class _SigninScreenState extends State<SigninScreen> {
               Container(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {
-                    //
-                  },
+                  onPressed: () {},
                   child: const Text(
                     "Forgot password?",
                     style: TextStyle(color: Color(0xFFE8541A)),
@@ -170,7 +169,12 @@ class _SigninScreenState extends State<SigninScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NameScreen())
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFE8541A),
                     padding: const EdgeInsets.symmetric(vertical: 14),
