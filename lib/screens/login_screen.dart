@@ -1,3 +1,4 @@
+import 'package:empeo/screens/pin_screen.dart';
 import 'package:empeo/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:country_flags/country_flags.dart';
@@ -100,7 +101,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PinScreen(),  // test pin screen
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFE8541A),
                       padding: const EdgeInsets.symmetric(vertical: 14),
