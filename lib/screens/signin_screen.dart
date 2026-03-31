@@ -1,6 +1,7 @@
-import 'package:empeo/screens/name_screen.dart';
+import 'package:empeo/screens/main_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:country_flags/country_flags.dart';
+import '../widgets/social_widget.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -172,7 +173,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NameScreen())
+                      MaterialPageRoute(builder: (context) => MainNavigation())
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -207,93 +208,10 @@ class _SigninScreenState extends State<SigninScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Center(
-                      child: ClipOval(
-                        child: Image.asset(
-                          "assets/images/google.png",
-                          height: 22,
-                          width: 22,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Center(
-                      child: ClipOval(
-                        child: Image.asset(
-                          "assets/images/office365.jpg",
-                          height: 22,
-                          width: 22,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Center(
-                      child: ClipOval(
-                        child: Image.asset(
-                          "assets/images/facebook.png",
-                          height: 22,
-                          width: 22,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Center(
-                      child: ClipOval(
-                        child: Image.asset(
-                          "assets/images/line.png",
-                          height: 22,
-                          width: 22,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
+                  SocialWidget(imageUrl: "assets/images/google.png"),
+                  SocialWidget(imageUrl: "assets/images/facebook.png"),
+                  SocialWidget(imageUrl: "assets/images/office365.jpg"),
+                  SocialWidget(imageUrl: "assets/images/line.png"),
                 ],
               ),
 
