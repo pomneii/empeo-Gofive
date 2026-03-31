@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../data/name_data.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
@@ -11,143 +11,11 @@ class NameScreen extends StatefulWidget {
 class _NameScreenState extends State<NameScreen> {
   final TextEditingController searchController = TextEditingController();
 
-  List<Map<String, String>> team = [
-    {
-      "name":
-          "Praewa Nantapgjaskdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffinj",
-      "role": "Part-time Officer",
-    },
-    {"name": "Sarayut Pasakul", "role": "Part-time Officer"},
-    {"name": "Rat Sangkrajang", "role": "IT"},
-    {"name": "pornpawit suttha", "role": "Department Manager"},
-    {"name": "Test Onboard", "role": "Part-time Officer"},
-    {
-      "name":
-          "Praewa Nantapgjaskdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffinj",
-      "role": "Part-time Officer",
-    },
-    {"name": "Sarayut Pasakul", "role": "Part-time Officer"},
-    {"name": "Rat Sangkrajang", "role": "IT"},
-    {"name": "pornpawit suttha", "role": "Department Manager"},
-    {"name": "Test Onboard", "role": "Part-time Officer"},
-    {"name": "Rat Sangkrajang", "role": "IT"},
-    {"name": "pornpawit suttha", "role": "Department Manager"},
-    {"name": "Test Onboard", "role": "Part-time Officer"},
-  ];
-
-  List<String> recent = [
-    "Ratfagoaha;lhamag",
-    "Onboard",
-    "Qq",
-    "Qq",
-    "Sarayut",
-    "kiki",
-    "kuku",
-    "kiki",
-  ];
-
-  int selectedIndex = 0;
+  int selectedIndex = 3;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {
-                setState(() => selectedIndex = 0);
-              },
-              icon: FaIcon(
-                selectedIndex == 0
-                    ? FontAwesomeIcons.solidHouse
-                    : FontAwesomeIcons.house,
-                color: selectedIndex == 0
-                    ? const Color(0xFFE8541A)
-                    : Colors.grey,
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() => selectedIndex = 1);
-              },
-              icon: FaIcon(
-                selectedIndex == 1
-                    ? FontAwesomeIcons.solidCalendarDays
-                    : FontAwesomeIcons.calendarDays,
-                color: selectedIndex == 1
-                    ? const Color(0xFFE8541A)
-                    : Colors.grey,
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() => selectedIndex = 2);
-              },
-              icon: FaIcon(
-                selectedIndex == 2
-                    ? FontAwesomeIcons.users
-                    : FontAwesomeIcons.users,
-                color: selectedIndex == 2
-                    ? const Color(0xFFE8541A)
-                    : Colors.grey,
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() => selectedIndex = 3);
-              },
-              icon: FaIcon(
-                selectedIndex == 3
-                    ? FontAwesomeIcons.solidAddressBook
-                    : FontAwesomeIcons.addressBook,
-                color: selectedIndex == 3
-                    ? const Color(0xFFE8541A)
-                    : Colors.grey,
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() => selectedIndex = 4);
-              },
-              icon: FaIcon(
-                selectedIndex == 4
-                    ? FontAwesomeIcons.book
-                    : FontAwesomeIcons.listCheck,
-                color: selectedIndex == 4
-                    ? const Color(0xFFE8541A)
-                    : Colors.grey,
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() => selectedIndex = 5);
-              },
-              icon: FaIcon(
-                selectedIndex == 5
-                    ? FontAwesomeIcons.solidUser
-                    : FontAwesomeIcons.user,
-                color: selectedIndex == 5
-                    ? const Color(0xFFE8541A)
-                    : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
