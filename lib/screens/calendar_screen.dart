@@ -6,6 +6,11 @@ import '../data/bottom_data.dart';
 import '../models/bottom_items.dart';
 import '../data/daydetail_data.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/calendar/calendar_bloc.dart';
+import '../bloc/calendar/calendar_event.dart';
+import '../bloc/calendar/calendar_state.dart';
+
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -47,20 +52,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   static const days = ["จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"];
 
-  DateTime currentMonth = DateTime(2026, 4);
-
-  void nextMonth() {
-    setState(() {
-      currentMonth = DateTime(currentMonth.year, currentMonth.month + 1);
-    });
-  }
-
-  void previousMonth() {
-    setState(() {
-      currentMonth = DateTime(currentMonth.year, currentMonth.month - 1);
-    });
-  }
-
   // add shift bottomsheet
   void showAddShiftSheet() {
     showModalBottomSheet(
@@ -101,7 +92,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.55,
+          height: MediaQuery.of(context).size.height * 0.65,
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
@@ -149,7 +140,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // open bottomsheet
   void openBottomSheet(DateTime date) {
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -229,76 +219,101 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final month = currentMonth;
+    return BlocListener<CalendarBloc, CalendarState>(
+      listenWhen: (previous, current) => current.selectedDate != null,
+      listener: (context, state) {
+        if (state.selectedDate?.day == 10) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("วันที่ 10!"),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<CalendarBloc, CalendarState>(
+        builder: (context, state) {
+          final month = state.currentMonth;
+          final day = state.currentDay;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: const SizedBox(),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: previousMonth,
-              child: Icon(Icons.arrow_back_ios_new, size: 18),
-            ),
-            SizedBox(width: 8),
-            Text(
-              "${thaiMonths[currentMonth.month - 1]} ${currentMonth.year + 543}",
-              style: const TextStyle(fontSize: 20),
-            ),
-            SizedBox(width: 8),
-            GestureDetector(
-              onTap: nextMonth,
-              child: Icon(Icons.arrow_forward_ios, size: 18),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        actions: [
-          GestureDetector(
-            onTap: showShiftDetails,
-            child: Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 2),
+          return Scaffold(
+            appBar: AppBar(
+              leading: const SizedBox(),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => context.read<CalendarBloc>().add(
+                      CalendarPreviousMonthPressed(),
+                    ),
+                    child: const Icon(Icons.arrow_back_ios_new, size: 18),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "${thaiMonths[month.month - 1]} ${month.year + 543}",
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () => context.read<CalendarBloc>().add(
+                      CalendarNextMonthPressed(),
+                    ),
+                    child: const Icon(Icons.arrow_forward_ios, size: 18),
+                  ),
+                ],
               ),
-              child: const Icon(
-                Icons.question_mark,
-                color: Colors.black,
-                size: 18,
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              actions: [
+                GestureDetector(
+                  onTap: showShiftDetails,
+                  child: Container(
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black, width: 2),
+                    ),
+                    child: const Icon(
+                      Icons.question_mark,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Center(
+                  child: GestureDetector(
+                    onTap: showAddShiftSheet,
+                    child: const Icon(Icons.add, size: 28, color: Colors.black),
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 20,
+                ),
+                child: Column(
+                  children: [
+                    const CalendarHeaderRow(),
+                    const SizedBox(height: 10),
+                    _buildCalendar(month, day),
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 10),
-          Center(
-            child: GestureDetector(
-              onTap: showAddShiftSheet,
-              child: const Icon(Icons.add, size: 28, color: Colors.black),
-            ),
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-          child: Column(
-            children: [
-              const CalendarHeaderRow(),
-              const SizedBox(height: 10),
-              _buildCalendar(month),
-            ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
   /// calendar grid
-  Widget _buildCalendar(DateTime month) {
+  Widget _buildCalendar(DateTime month, DateTime currentDay) {
     final days = generateCalendar(month.year, month.month);
 
     return Expanded(
@@ -311,14 +326,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         itemCount: days.length,
         itemBuilder: (context, index) {
-          return buildDayCell(days[index], month);
+          return buildDayCell(days[index], month, currentDay);
         },
       ),
     );
   }
 
   /// calendar cell
-  Widget buildDayCell(DateTime date, DateTime currentMonth) {
+  Widget buildDayCell(
+    DateTime date,
+    DateTime currentMonth,
+    DateTime currentDay,
+  ) {
     bool isOtherMonth = date.month != currentMonth.month;
     bool isWeekend = date.weekday >= 6;
 
@@ -340,7 +359,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
 
     return GestureDetector(
-      onTap: () => openBottomSheet(date),
+      onTap: () => {
+        context.read<CalendarBloc>().add(CalendarDayPressed(date)),
+        openBottomSheet(date),
+      },
       child: Opacity(
         opacity: isOtherMonth ? 0.5 : 1,
         child: Container(
@@ -353,12 +375,35 @@ class _CalendarScreenState extends State<CalendarScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               /// DAY
-              Text(
-                "${date.day}",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: isWeekend ? Colors.black : Colors.white,
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:
+                      date.day == currentDay.day &&
+                          date.month == currentDay.month &&
+                          date.year == currentDay.year
+                      ? Colors.white
+                      : Colors.transparent,
+                ),
+                child: Center(
+                  child: Text(
+                    "${date.day}",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color:
+                          date.day == currentDay.day &&
+                              date.month == currentDay.month &&
+                              date.year == currentDay.year
+                          ? Colors
+                                .black // ← font สีดำ
+                          : isWeekend
+                          ? Colors.black
+                          : Colors.white,
+                    ),
+                  ),
                 ),
               ),
 

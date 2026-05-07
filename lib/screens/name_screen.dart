@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/name/name_event.dart';
+import '../bloc/name/name_bloc.dart';
+import '../bloc/name/name_state.dart';
+
 import '../data/name_data.dart';
 
 class NameScreen extends StatefulWidget {
@@ -11,8 +17,6 @@ class NameScreen extends StatefulWidget {
 class _NameScreenState extends State<NameScreen> {
   final TextEditingController searchController = TextEditingController();
 
-  int selectedIndex = 3;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +28,6 @@ class _NameScreenState extends State<NameScreen> {
             children: [
               const SizedBox(height: 10),
 
-              // search bar
               SearchBar(
                 controller: searchController,
                 backgroundColor: const WidgetStatePropertyAll(
@@ -46,13 +49,14 @@ class _NameScreenState extends State<NameScreen> {
                   ),
                 ),
                 onChanged: (value) {
-                  setState(() {});
+                  context
+                      .read<NameBloc>()
+                      .add(SearchNameEvent(value));
                 },
               ),
 
               const SizedBox(height: 24),
 
-              // recent searches
               const Text(
                 "Recent Searches",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -82,7 +86,6 @@ class _NameScreenState extends State<NameScreen> {
                             ),
                           ),
                           const SizedBox(height: 6),
-
                           SizedBox(
                             width: 54,
                             child: Text(
@@ -102,7 +105,6 @@ class _NameScreenState extends State<NameScreen> {
 
               const SizedBox(height: 18),
 
-              // own team
               const Text(
                 "Own Team",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -111,45 +113,68 @@ class _NameScreenState extends State<NameScreen> {
               const SizedBox(height: 10),
 
               Expanded(
-                child: ListView.builder(
-                  itemCount: team.length,
-                  itemBuilder: (context, index) {
-                    final member = team[index];
+                child: BlocBuilder<NameBloc, NameState>(
+                  builder: (context, state) {
+                    List<Map<String, String>> displayList = team;
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.grey.shade300,
-                            child: Text(
-                              member["name"]![0],
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  member["name"]!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                    if (state is NameLoaded) {
+                      displayList = state.results;
+                    }
+
+                    if (displayList.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          "No results found",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: displayList.length,
+                      itemBuilder: (context, index) {
+                        final member = displayList[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.grey.shade300,
+                                child: Text(
+                                  member["name"]![0],
+                                  style:
+                                      const TextStyle(color: Colors.grey),
                                 ),
-                                Text(
-                                  member["role"]!,
-                                  style: const TextStyle(color: Colors.grey),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      member["name"]!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      member["role"]!,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
                 ),

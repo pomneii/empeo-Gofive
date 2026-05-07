@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(     
       title: 'Empeo',
       debugShowCheckedModeBanner: false,
       home: const LoginScreen(),

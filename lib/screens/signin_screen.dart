@@ -209,8 +209,11 @@ class _SigninScreenState extends State<SigninScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SocialWidget(imageUrl: "assets/images/google.png"),
+                  const SizedBox(width: 15),
                   SocialWidget(imageUrl: "assets/images/facebook.png"),
+                  const SizedBox(width: 15),
                   SocialWidget(imageUrl: "assets/images/office365.jpg"),
+                  const SizedBox(width: 15),
                   SocialWidget(imageUrl: "assets/images/line.png"),
                 ],
               ),
